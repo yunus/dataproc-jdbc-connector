@@ -17,8 +17,8 @@ package com.google.cloud.dataproc.jdbc;
 
 import static com.google.cloud.dataproc.jdbc.HiveUrlUtils.parseHiveUrl;
 
-import com.google.cloud.dataproc.v1beta2.ClusterControllerClient;
-import com.google.cloud.dataproc.v1beta2.ClusterControllerSettings;
+import com.google.cloud.dataproc.v1.ClusterControllerClient;
+import com.google.cloud.dataproc.v1.ClusterControllerSettings;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.sql.Connection;

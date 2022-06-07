@@ -21,12 +21,12 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode;
-import com.google.cloud.dataproc.v1beta2.Cluster;
-import com.google.cloud.dataproc.v1beta2.ClusterConfig;
-import com.google.cloud.dataproc.v1beta2.ClusterControllerClient;
-import com.google.cloud.dataproc.v1beta2.ClusterMetrics;
-import com.google.cloud.dataproc.v1beta2.ClusterStatus;
-import com.google.cloud.dataproc.v1beta2.EndpointConfig;
+import com.google.cloud.dataproc.v1.Cluster;
+import com.google.cloud.dataproc.v1.ClusterConfig;
+import com.google.cloud.dataproc.v1.ClusterControllerClient;
+import com.google.cloud.dataproc.v1.ClusterMetrics;
+import com.google.cloud.dataproc.v1.ClusterStatus;
+import com.google.cloud.dataproc.v1.EndpointConfig;
 import com.google.common.collect.ImmutableMap;
 import java.sql.SQLException;
 import java.util.Collections;

@@ -24,8 +24,7 @@ dependencies {
     // TODO:
     //  [WIP] we have submitted a PR to Hive to update HiveConnection [https://issues.apache.org/jira/browse/HIVE-24053]
     //  will potentially upload a google cloud dataproc specific hive standalone jar to maven central
-//  compile "org.apache.hive:hive-jdbc:2.1.0:standalone"
-    compile files('hive-jdbc-4.0.0-SNAPSHOT-standalone.jar')
+    compile files("hive-jdbc-2.3.9-standalone.jar")
 }
 
 task relocateShadowJar(type: ConfigureShadowRelocation) {

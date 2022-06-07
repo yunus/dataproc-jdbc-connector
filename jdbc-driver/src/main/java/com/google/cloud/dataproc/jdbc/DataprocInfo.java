@@ -19,8 +19,9 @@ import static com.google.cloud.dataproc.jdbc.HiveUrlUtils.checkUrl;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode;
-import com.google.cloud.dataproc.v1beta2.Cluster;
-import com.google.cloud.dataproc.v1beta2.ClusterControllerClient;
+
+import com.google.cloud.dataproc.v1.ClusterControllerClient;
+import com.google.cloud.dataproc.v1.Cluster;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
