@@ -13,10 +13,17 @@ In order to use this library, you first need to go through the following steps:
 1. [Set up a Cloud project][set up a project]
 2. [Setup Authentication][authentication] <br />
     Note that we recommend using service account login rather than end user login.
-3. Make sure [Component Gateway is enabled][create cluster with CG] for the cluster(s) you are trying to connect to within the project
-4. Make sure [Hive is running in HTTP mode][http mode] for the cluster(s)
-
-For Step 4 above, we have provided an example initialization action file at `gs://hive-http-mode-init-action/hive-http-config.sh` that would configure Hive to be running in HTTP mode during cluster creation.
+3. If you plan to use internal IPs only, follow [this guide](https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity) to setup your VPC network.
+4. Make sure [Component Gateway is enabled][create cluster with CG] for the cluster(s) you are trying to connect to within the project
+5. Make sure [Hive is running in HTTP mode][http mode] for the cluster(s). To achieve that create the cluster with the following cluster properties:
+```json
+override_properties = {
+  "hive:hive.server2.transport.mode"   = "http",
+  "hive:hive.server2.thrift.http.port" = "10000",
+  "hive:hive.server2.thrift.http.path" = "cliservice",
+}
+```
+5. Make sure that Knox is configured to use port 1000. To do that we have an example initialization action [knox-config.sh](knox-config.sh)
 
 [set up a project]: [https://cloud.google.com/dataproc/docs/guides/setup-project]
 [authentication]: https://cloud.google.com/docs/authentication/getting-started#auth-cloud-implicit-python
@@ -24,19 +31,26 @@ For Step 4 above, we have provided an example initialization action file at `gs:
 [http mode]: https://cwiki.apache.org/confluence/display/Hive/Setting+Up+HiveServer2#SettingUpHiveServer2-RunninginHTTPMode
 
 ## How to use Dataproc Driver
-1. Clone this repo
+1. The Dataproc JDBC driver is an add-on for Hive JDBC driver. We add google authentication to Hive JDBC but 
+for that to happen Hive JDBC should allow HTTP interceptors. You should re-compile Hive with the changes from [this commit](https://github.com/yunus/hive/commit/ae598d2f75fc59c9ba8a99af28ea521a50200f02).
+The commit is only for 2.3.x release but the changes are simple to be ported to other Hive versions.
+ 
+2. After having Hive JDBC, Clone this repo
     ```bash
     git clone https://github.com/GoogleCloudDataproc/dataproc-jdbc-connector.git
     cd dataproc-jdbc-connector
     ``` 
-2. Build Dataproc Driver JAR
+3. Build Dataproc Driver JAR by placing the Hive JDBC driver under hive folder or change [hive/build.gradle](hive/build.gradle) to point the correct location.
     ```bash
+   # To create fat-jar run below. You may use the fat-jar with beeline
     ./gradlew -p jdbc-driver shadowJar
+   # To have a slim-jar with fewer dependencies baked in, run
+   ./gradlew -p jdbc-driver jar
     ```
     Note that this step might take around 45 minutes. <br />
     Compiled Dataproc Driver JAR will be at `dataproc-jdbc-connector/jdbc-driver/build/libs/jdbc-driver-1.0-SNAPSHOT-all.jar`.
 
-2. Build example-client JAR
+4. Build example-client JAR
     ```bash
     ./gradlew -p example-client shadowJar
     ```
@@ -60,7 +74,7 @@ Note that `clusterName` has a higher priority than `clusterPoolLabel`, if you pa
        
     Example: 
     ```bash
-    jdbc:dataproc://hive/;projectId={pid};region={region};clusteroPoolLabel=com=google:team=dataproc`
+    jdbc:dataproc://hive/;projectId={pid};region={region};clusterPoolLabel=com=google:team=dataproc`
     ```   
 * DataprocDriver also accepts other semicolon separated list of session variables, Hive configuration variables or Hive variables that [Hive supports](https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-ConnectionURLFormat)
 
